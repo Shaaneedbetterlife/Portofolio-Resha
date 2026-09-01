@@ -12,12 +12,10 @@ const heroProfileNextImage = document.getElementById("heroProfileNextImage");
 const profilePhotos = [
   {
     src: "assets/images/profile-resha-02.jpeg",
-    alt: "Resha Priyatna at Pertamina Trans Kontinental",
     position: "42% 54%",
   },
   {
     src: "assets/images/profile-resha-03.jpeg",
-    alt: "Resha Priyatna in front of the Wahidin Sudiro Husodo building",
     position: "50% 57%",
   },
 ];
@@ -26,6 +24,7 @@ const PROFILE_INTERVAL_MS = 5000;
 const PROFILE_TURN_DURATION_MS = 320;
 let profileIndex = 0;
 let profileTimer = null;
+let profileTurnTimer = null;
 let profileIsTurning = false;
 
 function setCurrentProfile(photo) {
@@ -69,9 +68,9 @@ function rotateProfile() {
   setNextProfile(profilePhotos[nextIndex]);
   heroProfileRotator.offsetWidth;
 
-  window.setTimeout(() => {
+  profileTurnTimer = window.setTimeout(() => {
     heroProfileRotator.classList.add("is-fading");
-    window.setTimeout(
+    profileTurnTimer = window.setTimeout(
       () => finishProfileTurn(nextIndex),
       PROFILE_TURN_DURATION_MS,
     );
@@ -535,7 +534,7 @@ contactForm?.addEventListener("submit", async (event) => {
           name,
           email,
           message,
-          _subject: `Portfolio message from ${name}`,
+          _subject: `Got message from ${name}`,
           _template: "table",
           _captcha: "false",
         }),
@@ -550,10 +549,8 @@ contactForm?.addEventListener("submit", async (event) => {
     contactForm.reset();
     contactFormStatus.textContent = "Message sent successfully. Thank you!";
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "";
-    contactFormStatus.textContent = /activation/i.test(errorMessage)
-      ? "Form belum diaktivasi. Cek inbox atau Spam untuk email FormSubmit, lalu klik Activate Form."
-      : "Message could not be sent. Please try again or email me directly.";
+    contactFormStatus.textContent =
+      "Message could not be sent. Please try again or email me directly.";
   } finally {
     contactSubmit.disabled = false;
     contactSubmit.removeAttribute("aria-busy");
