@@ -3,6 +3,164 @@ const reduceMotion = window.matchMedia(
 ).matches;
 const { projects, certificates } = window.portfolioData;
 
+/*  profile */
+const heroProfileScene = document.getElementById("heroProfileScene");
+const heroProfileRotator = document.getElementById("heroProfileRotator");
+const heroProfileImage = document.getElementById("heroProfileImage");
+const heroProfileNextImage = document.getElementById("heroProfileNextImage");
+
+const profilePhotos = [
+  {
+    src: "assets/images/profile-resha-02.jpeg",
+    alt: "Resha Priyatna at Pertamina Trans Kontinental",
+    position: "42% 54%",
+  },
+  {
+    src: "assets/images/profile-resha-03.jpeg",
+    alt: "Resha Priyatna in front of the Wahidin Sudiro Husodo building",
+    position: "50% 57%",
+  },
+];
+
+const PROFILE_INTERVAL_MS = 5000;
+const PROFILE_TURN_DURATION_MS = 320;
+let profileIndex = 0;
+let profileTimer = null;
+let profileIsTurning = false;
+
+function setCurrentProfile(photo) {
+  if (heroProfileImage) {
+    heroProfileImage.src = photo.src;
+    heroProfileImage.alt = photo.alt;
+    heroProfileImage.style.setProperty("--profile-position", photo.position);
+  }
+}
+
+function setNextProfile(photo) {
+  if (!heroProfileNextImage) return;
+  heroProfileNextImage.src = photo.src;
+  heroProfileNextImage.style.setProperty("--profile-position", photo.position);
+}
+
+function finishProfileTurn(nextIndex) {
+  profileIndex = nextIndex;
+  heroProfileRotator?.classList.add("is-resetting");
+  heroProfileRotator?.classList.remove("is-fading");
+  setCurrentProfile(profilePhotos[profileIndex]);
+  setNextProfile(profilePhotos[(profileIndex + 1) % profilePhotos.length]);
+  heroProfileRotator?.offsetWidth;
+  window.setTimeout(() => {
+    heroProfileRotator?.classList.remove("is-resetting");
+    profileIsTurning = false;
+  }, 20);
+}
+
+function rotateProfile() {
+  if (
+    profileIsTurning ||
+    !heroProfileRotator ||
+    !heroProfileNextImage
+  ) {
+    return;
+  }
+
+  profileIsTurning = true;
+  const nextIndex = (profileIndex + 1) % profilePhotos.length;
+  setNextProfile(profilePhotos[nextIndex]);
+  heroProfileRotator.offsetWidth;
+
+  window.setTimeout(() => {
+    heroProfileRotator.classList.add("is-fading");
+    window.setTimeout(
+      () => finishProfileTurn(nextIndex),
+      PROFILE_TURN_DURATION_MS,
+    );
+  }, 20);
+}
+
+function startProfileRotation() {
+  window.clearInterval(profileTimer);
+  if (reduceMotion || !heroProfileRotator) return;
+  profileTimer = window.setInterval(rotateProfile, PROFILE_INTERVAL_MS);
+}
+
+profilePhotos.forEach((photo) => {
+  const preload = new Image();
+  preload.src = photo.src;
+});
+setCurrentProfile(profilePhotos[0]);
+setNextProfile(profilePhotos[1]);
+startProfileRotation();
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    window.clearInterval(profileTimer);
+    profileTimer = null;
+    return;
+  }
+  startProfileRotation();
+});
+
+const profileParallaxLayers = heroProfileScene
+  ? [...heroProfileScene.querySelectorAll("[data-profile-depth]")]
+  : [];
+const profileFinePointer = window.matchMedia("(pointer: fine)").matches;
+let profileParallaxFrame = null;
+let profileTargetX = 0;
+let profileTargetY = 0;
+let profileCurrentX = 0;
+let profileCurrentY = 0;
+
+function renderProfileParallax() {
+  profileCurrentX += (profileTargetX - profileCurrentX) * 0.1;
+  profileCurrentY += (profileTargetY - profileCurrentY) * 0.1;
+
+  profileParallaxLayers.forEach((layer) => {
+    const depth = Number(layer.dataset.profileDepth || 0.5);
+    layer.style.setProperty("--profile-move-x", `${profileCurrentX * depth}px`);
+    layer.style.setProperty("--profile-move-y", `${profileCurrentY * depth}px`);
+  });
+
+  const stillMoving =
+    Math.abs(profileTargetX - profileCurrentX) > 0.05 ||
+    Math.abs(profileTargetY - profileCurrentY) > 0.05;
+  profileParallaxFrame = stillMoving
+    ? requestAnimationFrame(renderProfileParallax)
+    : null;
+}
+
+function requestProfileParallaxFrame() {
+  if (!profileParallaxFrame) {
+    profileParallaxFrame = requestAnimationFrame(renderProfileParallax);
+  }
+}
+
+function resetProfileParallax() {
+  profileTargetX = 0;
+  profileTargetY = 0;
+  requestProfileParallaxFrame();
+}
+
+if (
+  heroProfileScene &&
+  profileParallaxLayers.length > 0 &&
+  profileFinePointer &&
+  !reduceMotion
+) {
+  heroProfileScene.addEventListener(
+    "pointermove",
+    (event) => {
+      const bounds = heroProfileScene.getBoundingClientRect();
+      profileTargetX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 18;
+      profileTargetY = ((event.clientY - bounds.top) / bounds.height - 0.5) * 14;
+      requestProfileParallaxFrame();
+    },
+    { passive: true },
+  );
+  heroProfileScene.addEventListener("pointerleave", resetProfileParallax);
+  window.addEventListener("blur", resetProfileParallax);
+}
+
 function openWithCardFeedback(card, callback) {
   if (reduceMotion) {
     callback();
@@ -35,7 +193,6 @@ function projectCard(project, set) {
       <h3 class="project-title">${project.title}</h3>
       <div class="project-footer">
         <p class="project-subtitle">${project.subtitle}</p>
-        <span class="project-read">View details&nbsp;&nbsp;↗</span>
       </div>
     </div>`;
 
@@ -349,16 +506,54 @@ window.addEventListener("resize", () => {
   if (modal.classList.contains("open")) scheduleModalDescriptionFit();
 });
 
-/* Keep placeholder contact links inactive until real URLs are added. */
-document.querySelectorAll('.socials a[href="#"]').forEach((link) => {
-  link.addEventListener("click", (event) => event.preventDefault());
-});
-
-/* Contact form placeholder until a recipient or form service is configured. */
+/* Send contact messages */
 const contactForm = document.getElementById("contactForm");
 const contactFormStatus = document.getElementById("contactFormStatus");
-contactForm?.addEventListener("submit", (event) => {
+const contactSubmit = contactForm?.querySelector('[type="submit"]');
+contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  contactFormStatus.textContent =
-    "Add a destination email or form service to enable message delivery.";
+
+  const formData = new FormData(contactForm);
+  const name = String(formData.get("name") || "").trim();
+  const email = String(formData.get("email") || "").trim();
+  const message = String(formData.get("message") || "").trim();
+
+  contactFormStatus.textContent = "Sending your message...";
+  contactSubmit.disabled = true;
+  contactSubmit.setAttribute("aria-busy", "true");
+
+  try {
+    const response = await fetch(
+      "https://formsubmit.co/ajax/reshapriyatna@gmail.com",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _subject: `Portfolio message from ${name}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      },
+    );
+    const result = await response.json();
+
+    if (!response.ok || result.success === false || result.success === "false") {
+      throw new Error(result.message || "Message delivery failed.");
+    }
+
+    contactForm.reset();
+    contactFormStatus.textContent = "Message sent successfully. Thank you!";
+  } catch (error) {
+    contactFormStatus.textContent =
+      "Message could not be sent. Please try again or email me directly.";
+  } finally {
+    contactSubmit.disabled = false;
+    contactSubmit.removeAttribute("aria-busy");
+  }
 });

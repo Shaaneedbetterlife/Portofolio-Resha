@@ -9,9 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260831-26" />
+    <link rel="stylesheet" href="styles.css?v=20260831-32" />
     <script src="data.js?v=20260819-17" defer></script>
-    <script src="script.js?v=20260831-02" defer></script>
+    <script src="script.js?v=20260831-10" defer></script>
   </head>
   <body>
     <!-- Space background -->
@@ -39,9 +39,42 @@
         <!-- Hero -->
         <section class="hero" id="top">
           <div class="wrap hero-grid">
-            <div class="hero-visual" aria-label="Profile image placeholder">
-              <div class="hero-profile-frame">
-                <div class="hero-profile-slot"></div>
+            <div
+              class="hero-visual"
+              id="heroProfileScene"
+              aria-label="Rotating portraits of Resha Priyatna"
+            >
+              <span class="profile-orbit profile-orbit-one profile-parallax-layer" data-profile-depth="0.22" aria-hidden="true"><span></span></span>
+              <span class="profile-orbit profile-orbit-two profile-parallax-layer" data-profile-depth="0.38" aria-hidden="true"><span></span></span>
+
+              <span class="profile-floating-asset profile-asset-orange profile-parallax-layer" data-profile-depth="1.5" aria-hidden="true"><span class="profile-dot profile-dot-orange"></span></span>
+              <span class="profile-floating-asset profile-asset-mint profile-parallax-layer" data-profile-depth="1.2" aria-hidden="true"><span class="profile-dot profile-dot-mint"></span></span>
+              <span class="profile-floating-asset profile-asset-ring profile-parallax-layer" data-profile-depth="1.65" aria-hidden="true"><span class="profile-ring"></span></span>
+              <span class="profile-floating-asset profile-asset-triangle-one profile-parallax-layer" data-profile-depth="1.35" aria-hidden="true"><img src="assets/images/hero-floating-triangle.png" alt="" /></span>
+              <span class="profile-floating-asset profile-asset-triangle-two profile-parallax-layer" data-profile-depth="1.8" aria-hidden="true"><img src="assets/images/hero-floating-triangle.png" alt="" /></span>
+
+              <span class="profile-shadow profile-parallax-layer" data-profile-depth="0.12" aria-hidden="true"></span>
+
+              <div class="hero-profile-frame profile-parallax-layer" data-profile-depth="0.48">
+                <div class="hero-profile-float">
+                  <div class="hero-profile-rotator" id="heroProfileRotator">
+                    <img
+                      class="hero-profile-image hero-profile-image-current"
+                      id="heroProfileImage"
+                      src="assets/images/profile-resha-02.jpeg"
+                      alt="Resha Priyatna at Pertamina Trans Kontinental"
+                      draggable="false"
+                    />
+                    <img
+                      class="hero-profile-image hero-profile-image-next"
+                      id="heroProfileNextImage"
+                      src="assets/images/profile-resha-03.jpeg"
+                      alt=""
+                      aria-hidden="true"
+                      draggable="false"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div class="hero-copy">
@@ -128,21 +161,21 @@
                 </defs>
                 <path
                   class="route-shadow"
-                  d="M55 102 C145 102 166 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81"
+                  d="M0 102 C70 102 145 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81 C1165 81 1184 81 1200 81"
                 />
                 <path
                   class="route-base"
-                  d="M55 102 C145 102 166 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81"
+                  d="M0 102 C70 102 145 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81 C1165 81 1184 81 1200 81"
                 />
                 <path
                   class="route-flow"
-                  d="M55 102 C145 102 166 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81"
+                  d="M0 102 C70 102 145 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81 C1165 81 1184 81 1200 81"
                 />
                 <circle class="route-tracer" r="5" fill="#d8d8dc">
                   <animateMotion
                     dur="8.5s"
                     repeatCount="indefinite"
-                    path="M55 102 C145 102 166 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81"
+                    path="M0 102 C70 102 145 102 205 102 C320 102 394 58 492 75 C542 84 568 102 600 102 C708 102 783 49 878 69 C930 80 958 102 997 102 C1058 102 1100 96 1145 81 C1165 81 1184 81 1200 81"
                   />
                 </circle>
               </svg>
@@ -202,32 +235,47 @@
               <h2 class="serif">Contact</h2>
 
               <div class="socials" aria-label="Contact channels">
-                <a class="contact-link" href="#">
+                <a
+                  class="contact-link"
+                  href="mailto:reshapriyatna@gmail.com"
+                  aria-label="Email reshapriyatna@gmail.com"
+                >
                   <span class="contact-icon contact-icon-image contact-icon-email" aria-hidden="true">
                     <img src="assets/images/contact-email-transparent.png" alt="" />
                   </span>
-                  <strong>Email</strong>
+                  <strong>reshapriyatna@gmail.com</strong>
                   <span class="contact-arrow" aria-hidden="true">↗</span>
                 </a>
-                <a class="contact-link" href="#">
+                <a
+                  class="contact-link"
+                  href="https://www.instagram.com/rshhaaaaa?igsi=MXJsMjc1a3Y3eWFzNw=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram @rshhaaaaa (opens in a new tab)"
+                >
                   <span class="contact-icon contact-icon-image contact-icon-instagram" aria-hidden="true">
                     <img src="assets/images/contact-instagram-transparent.png" alt="" />
                   </span>
-                  <strong>Instagram</strong>
+                  <strong>@rshhaaaaa</strong>
                   <span class="contact-arrow" aria-hidden="true">↗</span>
                 </a>
-                <a class="contact-link" href="#">
+                <a
+                  class="contact-link"
+                  href="https://www.linkedin.com/in/resha-priyatna"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn Resha Priyatna (opens in a new tab)"
+                >
                   <span class="contact-icon contact-icon-image contact-icon-linkedin" aria-hidden="true">
                     <img src="assets/images/contact-linkedin-transparent.png" alt="" />
                   </span>
-                  <strong>LinkedIn</strong>
+                  <strong>Resha Priyatna</strong>
                   <span class="contact-arrow" aria-hidden="true">↗</span>
                 </a>
               </div>
             </div>
 
             <div class="contact-form-panel">
-              <h3>Contact Me</h3>
               <form class="contact-form" id="contactForm">
                 <div class="contact-form-grid">
                   <div class="contact-field-column">
