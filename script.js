@@ -550,8 +550,10 @@ contactForm?.addEventListener("submit", async (event) => {
     contactForm.reset();
     contactFormStatus.textContent = "Message sent successfully. Thank you!";
   } catch (error) {
-    contactFormStatus.textContent =
-      "Message could not be sent. Please try again or email me directly.";
+    const errorMessage = error instanceof Error ? error.message : "";
+    contactFormStatus.textContent = /activation/i.test(errorMessage)
+      ? "Form belum diaktivasi. Cek inbox atau Spam untuk email FormSubmit, lalu klik Activate Form."
+      : "Message could not be sent. Please try again or email me directly.";
   } finally {
     contactSubmit.disabled = false;
     contactSubmit.removeAttribute("aria-busy");
