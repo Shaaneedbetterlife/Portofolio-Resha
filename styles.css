@@ -2487,50 +2487,76 @@ body.modal-open {
     padding: 76px 18px 28px;
   }
   #experience .experience-map {
+    width: 100%;
     height: auto;
     min-height: auto;
+    margin-left: 0;
+    padding: 38px var(--pad) 22px;
+    transform: none;
+    border-radius: 22px;
   }
   .map-route {
     display: none;
   }
-  .map-node {
+  #experience .map-node {
     position: relative !important;
     left: auto !important;
     right: auto !important;
     top: auto !important;
-    width: 100%;
+    width: 100% !important;
     display: grid;
-    grid-template-columns: 18px 1fr;
-    gap: 14px;
-    margin-bottom: 18px;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
   }
-  .node-pin {
-    margin-top: 18px;
+  #experience .map-node:last-child {
     margin-bottom: 0;
   }
-  .map-node::after {
+  #experience .node-pin {
+    width: 10px;
+    height: 10px;
+    margin: 25px 0 0 2px;
+    border-width: 2px;
+  }
+  #experience .map-node::after {
     content: "";
     position: absolute;
-    left: 8px;
-    top: 34px;
-    bottom: -20px;
+    left: 6px;
+    top: 36px;
+    bottom: -16px;
     width: 1px;
-    background: var(--line);
+    background: rgba(255, 255, 255, 0.28);
   }
-  .map-node.n3::after {
+  #experience .map-node.n3::after {
     display: none;
   }
-  .node-card {
-    padding: 14px 15px;
+  #experience .node-card {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) 60px;
+    gap: 12px;
+    padding: 18px 14px;
+    border-radius: 18px;
   }
-  .node-role {
-    font-size: 20px;
+  #experience .node-role {
+    font-size: 18px;
+    line-height: 1.08;
   }
-  .node-org,
-  .node-desc {
-    font-size: 11px;
+  #experience .node-org {
+    font-size: 10.5px;
+    line-height: 1.35;
   }
-  .node-year {
+  #experience .node-desc {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  #experience .node-logo {
+    max-height: 58px;
+  }
+  #experience .node-logo-wide {
+    max-height: 38px;
+  }
+  #experience .node-year {
     font-size: 9px;
   }
   .projects-grid,
